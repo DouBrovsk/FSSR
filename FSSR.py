@@ -28,7 +28,7 @@ def MAMLtrain(model, epochs_nb, trainloader, validloader, batch_size=1, verbose=
     best_loss = 6500000.0
     train_size = len(trainloader)
     valid_size = len(validloader)
-    print("Training start", flush=True)
+    #print("Training start", flush=True)
 
     for epoch in range(epochs_nb):
         # Verbose 1
