@@ -33,7 +33,7 @@ def MAMLtrain(model, epochs_nb, trainloader, validloader, batch_size=1, verbose=
     for epoch in range(epochs_nb):
         # Verbose 1
         if verbose:
-            print("Epoch [" + str(epoch + 1) + " / " + str(epochs_nb) + "]", flush=True)
+            print("Epoch [" + str(epoch + 1) + " / " + str(epochs_nb) + "]")
             print("-" * 10, flush=True)
 
         # Training
