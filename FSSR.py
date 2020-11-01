@@ -28,13 +28,13 @@ def MAMLtrain(model, epochs_nb, trainloader, validloader, batch_size=1, verbose=
     best_loss = 6500000.0
     train_size = len(trainloader)
     valid_size = len(validloader)
-    print("Training start")
+    print("Training start", flush=True)
 
     for epoch in range(epochs_nb):
         # Verbose 1
         if verbose:
             print("Epoch [" + str(epoch + 1) + " / " + str(epochs_nb) + "]")
-            print("-" * 10)
+            print("-" * 10, flush=True)
 
         # Training
         running_loss = 0.0
@@ -46,20 +46,20 @@ def MAMLtrain(model, epochs_nb, trainloader, validloader, batch_size=1, verbose=
             print(loss)
 
             if i % 20 == 0:
-                print("Batch " + str(i) + " / " + str(int(train_size)))
+                print("Batch " + str(i) + " / " + str(int(train_size)), flush=True)
             running_loss += loss
             verbose_loss += loss
             if i % 100 == 0 and i != 0:
-                print("Loss over last 100 batches: " + str(verbose_loss / (100 * batch_size)))
+                print("Loss over last 100 batches: " + str(verbose_loss / (100 * batch_size)), flush=True)
                 verbose_loss = 0.0
 
         # Verbose 2
         if verbose:
             epoch_loss = running_loss / (train_size * batch_size)
-            print(" ")
-            print(" ")
+            print(" ", flush=True)
+            print(" ", flush=True)
             print("****************")
-            print('Training Loss: {:.7f}'.format(epoch_loss))
+            print('Training Loss: {:.7f}'.format(epoch_loss), flush=True)
         # Validation
         running_loss = 0.0
         verbose_loss = 0.0
@@ -73,7 +73,7 @@ def MAMLtrain(model, epochs_nb, trainloader, validloader, batch_size=1, verbose=
         # Verbose 3
         if verbose:
             epoch_loss = running_loss / (valid_size * batch_size)
-            print('Validation Loss: {:.7f}'.format(epoch_loss))
+            print('Validation Loss: {:.7f}'.format(epoch_loss), flush=True)
 
         # Copy the model if it gets better with validation
         if epoch_loss < best_loss:
@@ -82,8 +82,8 @@ def MAMLtrain(model, epochs_nb, trainloader, validloader, batch_size=1, verbose=
     # Verbose 4
     if verbose:
         time_elapsed = time.time() - since
-        print("Training finished in {:.0f}m {:.0f}s".format(time_elapsed // 60, time_elapsed % 60))
-        print("Best validation loss: " + str(best_loss))
+        print("Training finished in {:.0f}m {:.0f}s".format(time_elapsed // 60, time_elapsed % 60), flush=True)
+        print("Best validation loss: " + str(best_loss), flush=True)
 
     model.load_state_dict(best_model)  # In place anyway
     return model  # Returning just in case
@@ -92,7 +92,7 @@ def MAMLtrain(model, epochs_nb, trainloader, validloader, batch_size=1, verbose=
 def makeCheckpoint(model, save_path, verbose=True):  # Function to save weights
     torch.save(model.state_dict(), save_path)
     if verbose:
-        print("Weights saved to: " + save_path)
+        print("Weights saved to: " + save_path, flush=True)
     return
 
 
@@ -115,17 +115,17 @@ def meta_train(train_path, valid_path, batch_size, epoch_nb, learning_rate, meta
     # Data loading
     trainset = utils.DADataset(train_path, transform=transform, num_shot=10, is_valid_file=utils.is_file_not_corrupted, scale_factor=scale_factor, mode='train')
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=4) # Batch must be composed of images of the same size if >1
-    print("Found " + str(len(trainloader)*batch_size) + " images in " + train_path)
+    print("Found " + str(len(trainloader)*batch_size) + " images in " + train_path, flush=True)
 
     validset = utils.FSDataset(valid_path, transform=transform, is_valid_file=utils.is_file_not_corrupted, scale_factor=scale_factor, mode='train')
     validloader = torch.utils.data.DataLoader(validset, batch_size=batch_size, shuffle=False, num_workers=0)
-    print("Found " + str(len(validloader)*batch_size) + " images in " + valid_path)
+    print("Found " + str(len(validloader)*batch_size) + " images in " + valid_path, flush=True)
 
     if weights_load is not None: # Load weights for further training if a path was given.
         meta_learner.load_state_dict(torch.load(weights_load))
-        print("Loaded weights from: " + str(weights_load))
+        print("Loaded weights from: " + str(weights_load), flush=True)
 
-    print(autoencoder)
+    print(autoencoder, flush=True)
 
     del autoencoder
 
@@ -159,9 +159,9 @@ def MAMLupscale(in_path, out_path, weights_path, learning_rate, batch_size, verb
     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=4)
     n = len(testloader)
     if verbose:
-        print("Found " + str(n) + " images in " + in_path)
-        print("Beginning upscaling...")
-        print("Clock started ")
+        print("Found " + str(n) + " images in " + in_path, flush=True)
+        print("Beginning upscaling...", flush=True)
+        print("Clock started ", flush=True)
 
     since = time.time()
     for i, data in enumerate(testloader):
@@ -188,13 +188,13 @@ def MAMLupscale(in_path, out_path, weights_path, learning_rate, batch_size, verb
         img.save(os.path.join(out_path, str(i) + ".png"))
         if verbose:
             if i % 100 == 0:
-                print("Image " + str(i) + " / " + str(n))
+                print("Image " + str(i) + " / " + str(n), flush=True)
 
     time_elapsed = time.time() - since
     if verbose:
-        print("Processed " + str(n) + " images in " + "{:.0f}m {:.0f}s".format(time_elapsed//60, time_elapsed % 60))
-        print("Overall speed: " + str(n/time_elapsed) + " images/s")
-        print("Upscaling: Done, files saved to " + out_path)
+        print("Processed " + str(n) + " images in " + "{:.0f}m {:.0f}s".format(time_elapsed//60, time_elapsed % 60), flush=True)
+        print("Overall speed: " + str(n/time_elapsed) + " images/s", flush=True)
+        print("Upscaling: Done, files saved to " + out_path, flush=True)
 
     return time_elapsed, n/time_elapsed, n, scale_factor
 
@@ -210,12 +210,12 @@ def finetuneMaml(train_path, valid_path, batch_size, epoch_nb, learning_rate, me
                                scale_factor=scale_factor, mode='train')
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True,
                                               num_workers=4)  # Batch must be composed of images of the same size if >1
-    print("Found " + str(len(trainloader) * batch_size) + " images in " + train_path)
+    print("Found " + str(len(trainloader) * batch_size) + " images in " + train_path, flush=True)
 
     validset = utils.FSDataset(valid_path, transform=transform, is_valid_file=utils.is_file_not_corrupted,
                                scale_factor=scale_factor, mode='train')
     validloader = torch.utils.data.DataLoader(validset, batch_size=batch_size, shuffle=False, num_workers=0)
-    print("Found " + str(len(validloader) * batch_size) + " images in " + valid_path)
+    print("Found " + str(len(validloader) * batch_size) + " images in " + valid_path, flush=True)
     meta_learner = Meta(config, learning_rate, meta_learning_rate, 10, 10, load_weights=load_weights).to(device)
     meta_learner = MAMLtrain(meta_learner, epoch_nb, trainloader, validloader, batch_size)
     makeCheckpoint(meta_learner, save_weights)
@@ -232,7 +232,7 @@ def model_train(train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=N
 
     if load_weights is not None:
         super_res_model.load_state_dict(torch.load(load_weights))
-        print("Loaded weights from: " + str(load_weights))
+        print("Loaded weights from: " + str(load_weights), flush=True)
 
     def train(model, epochs_nb, trainloader, validloader, optimizer):
         since = time.time()
@@ -240,13 +240,13 @@ def model_train(train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=N
         best_loss = 6500000.0
         train_size = len(trainloader)
         valid_size = len(validloader)
-        print("Training start")
+        print("Training start", flush=True)
 
         for epoch in range(epochs_nb):
             # Verbose 1
             if verbose:
-                print("Epoch [" + str(epoch+1) + " / " + str(epochs_nb) + "]")
-                print("-" * 10)
+                print("Epoch [" + str(epoch+1) + " / " + str(epochs_nb) + "]", flush=True)
+                print("-" * 10, flush=True)
 
             # Training
             running_loss = 0.0
@@ -261,20 +261,20 @@ def model_train(train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=N
                 print(loss.item())
 
                 if i%100 == 0:
-                    print("Batch " + str(i) + " / " + str(int(train_size)))
+                    print("Batch " + str(i) + " / " + str(int(train_size)), flush=True)
                 running_loss += loss.item()
                 verbose_loss += loss.item()
                 if i% 100 == 0 and i !=0:
-                    print("Loss over last 100 batches: " + str(verbose_loss/(100*batch_size)))
+                    print("Loss over last 100 batches: " + str(verbose_loss/(100*batch_size)), flush=True)
                     verbose_loss = 0.0
 
             # Verbose 2
             if verbose:
                 epoch_loss = running_loss / (train_size*batch_size)
-                print(" ")
-                print(" ")
+                print(" ", flush=True)
+                print(" ", flush=True)
                 print("****************")
-                print('Training Loss: {:.7f}'.format(epoch_loss))
+                print('Training Loss: {:.7f}'.format(epoch_loss), flush=True)
             # Validation
             running_loss = 0.0
             verbose_loss = 0.0
@@ -288,7 +288,7 @@ def model_train(train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=N
                 # Verbose 3
                 if verbose:
                     epoch_loss = running_loss / (valid_size*batch_size)
-                    print('Validation Loss: {:.7f}'.format(epoch_loss))
+                    print('Validation Loss: {:.7f}'.format(epoch_loss), flush=True)
 
             # Copy the model if it gets better with validation
             if epoch_loss < best_loss:
@@ -297,8 +297,8 @@ def model_train(train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=N
         # Verbose 4
         if verbose:
             time_elapsed = time.time() - since
-            print("Training finished in {:.0f}m {:.0f}s".format(time_elapsed//60, time_elapsed % 60))
-            print("Best validation loss: " + str(best_loss))
+            print("Training finished in {:.0f}m {:.0f}s".format(time_elapsed//60, time_elapsed % 60), flush=True)
+            print("Best validation loss: " + str(best_loss), flush=True)
 
         model.load_state_dict(best_model) # In place anyway
         return model # Returning just in case
@@ -306,7 +306,7 @@ def model_train(train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=N
     def makeCheckpoint(model, save_path): # Function to save weights
         torch.save(model.state_dict(), save_path)
         if verbose:
-            print("Weights saved to: " + save_path)
+            print("Weights saved to: " + save_path, flush=True)
         return
 
     trainset = utils.DADataset(train_path, num_shot=1, transform=transforms.ToTensor())
@@ -326,7 +326,7 @@ def upscale(load_weights, input, out):
 
     if load_weights is not None:
         edsr.load_state_dict(torch.load(load_weights))
-        print("Loaded weights from: " + str(load_weights))
+        print("Loaded weights from: " + str(load_weights), flush=True)
     label_path = os.path.join(out, 'labels/')
     if not(os.path.exists(label_path)):
         os.mkdir(label_path)
