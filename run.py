@@ -18,8 +18,8 @@ if __name__ == "__main__":
 
     parser.add_argument('--load_weights', default=None, help="Path to the weights to continue training, perform upscaling on a set of images or evaluate performance.")
     parser.add_argument('--save_weights', default='./weights/test.pt', help="Path to save the weights after training (.pth). Only for 'train' mode.")
-    parser.add_argument('--train_folder', default='../dataset/FSSR/DIV2K/DIV2K_train_HR/', help="Path to the folder containing the images of the training set. Only for 'train' mode.")
-    parser.add_argument('--valid_folder', default='../dataset/FSSR/DIV2K/DIV2K_valid_DA/', help="Path to the folder containing the images of the validation set. Only for 'train' mode.")
+    parser.add_argument('--train_folder', default='/../../mnt/data/prim_project/dataset/FSSR/DIV2K/DIV2K_train_HR/', help="Path to the folder containing the images of the training set. Only for 'train' mode.")
+    parser.add_argument('--valid_folder', default='/../../mnt/data/prim_project/dataset/FSSR/DIV2K/DIV2K_valid_DA/', help="Path to the folder containing the images of the validation set. Only for 'train' mode.")
     parser.add_argument('--epoch_nb', default=10, type=int, help="Number of epochs for training i.e the number of times the whole training set is iterated over as an integer. Only for 'train' mode.")
     parser.add_argument('--learning_rate', default=0.0001, type=float, help="Learning rate for training with Adam optimizer. Only for 'meta_train' & 'meta_upscale' mode.")
     parser.add_argument('--meta_learning_rate', default=0.00001, help="Learning rate of the meta training.")
