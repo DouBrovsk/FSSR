@@ -10,7 +10,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument('--mode', default='meta_train', choices=['meta_train', 'meta_upscale', 'finetune_maml', 'evaluation', 'upscale_video', 'model_train', 'upscale'])
     parser.add_argument('--device', default='cuda_if_available', choices=['cpu', 'cuda', 'cuda_if_available'], help="Leave default to use the GPU if it is available. CPU can't be used for training without changing the code.")
-    parser.add_argument('--input', default='../dataset/FSSR/DIV2K/DIV2K_valid_HR/', help="Path to the directory containing the images to upscale. Only used for upscaling or evaluation.")
+    parser.add_argument('--input', default='/../../mnt/data/prim_project/dataset/FSSR/DIV2K/DIV2K_valid_HR/', help="Path to the directory containing the images to upscale. Only used for upscaling or evaluation.")
     parser.add_argument('--output', default='./out/', help="Destination directory for the benchmark in 'evaluation' mode or upscaled images in 'upscale' mode.")
     parser.add_argument('--verbose', default=True, type=bool, choices=[True, False], help="Wether the script print info in stdout.")
     parser.add_argument('--network_name',  default='EDSR', choices=['EDSR'], help="Indicates which network is being used.")
