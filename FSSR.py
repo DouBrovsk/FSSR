@@ -1,4 +1,4 @@
-import torch
+okimport torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
@@ -130,7 +130,7 @@ def meta_train(train_path, valid_path, batch_size, epoch_nb, learning_rate, meta
     del autoencoder
 
     # Start training
-    meta_learner = MAMLtrain(meta_learner, epoch_nb, trainloader, validloader, batch_size=batch_size, loss_func=loss_func)
+    meta_learner = MAMLtrain(meta_learner, epoch_nb, trainloader, validloader, batch_size=batch_size)
     makeCheckpoint(meta_learner, save_path)
     return
 
