@@ -313,8 +313,8 @@ def model_train(train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=N
 
     trainset = utils.DADataset(train_path, num_shot=1, transform=transforms.ToTensor())
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=4)
-    validset = utils.FSDataset(valid_path, transform=transforms.ToTensor())
-    validloader = torch.utils.data.DataLoader(validset, batch_size=batch_size, shuffle=True, num_workers=2)
+    validset = utils.DADataset(valid_path,num_shot=1, transform=transforms.ToTensor())
+    validloader = torch.utils.data.DataLoader(validset, batch_size=batch_size, shuffle=True, num_workers=4)
 
     optimizer = optim.Adam(super_res_model.parameters(), lr=0.0001, amsgrad=True)
     super_res_model = train(super_res_model, epoch_nb, trainloader, validloader, optimizer)
