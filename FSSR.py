@@ -117,8 +117,8 @@ def meta_train(train_path, valid_path, batch_size, epoch_nb, learning_rate, meta
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=4) # Batch must be composed of images of the same size if >1
     print("Found " + str(len(trainloader)*batch_size) + " images in " + train_path, flush=True)
 
-    validset = utils.DADataset(valid_path, transform=transform, is_valid_file=utils.is_file_not_corrupted, scale_factor=scale_factor, mode='train')
-    validloader = torch.utils.data.DataLoader(validset, batch_size=batch_size, shuffle=False, num_workers=0)
+    validset = utils.DADataset(valid_path, transform=transform,num_shot=10, is_valid_file=utils.is_file_not_corrupted, scale_factor=scale_factor, mode='train')
+    validloader = torch.utils.data.DataLoader(validset, batch_size=batch_size, shuffle=False, num_workers=4)
     print("Found " + str(len(validloader)*batch_size) + " images in " + valid_path, flush=True)
 
     if weights_load is not None: # Load weights for further training if a path was given.
