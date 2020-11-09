@@ -212,7 +212,7 @@ def finetuneMaml(train_path, valid_path, batch_size, epoch_nb, learning_rate, me
                                               num_workers=4)  # Batch must be composed of images of the same size if >1
     print("Found " + str(len(trainloader) * batch_size) + " images in " + train_path, flush=True)
 
-    validset = utils.FSDataset(valid_path, transform=transform, is_valid_file=utils.is_file_not_corrupted,
+    validset = utils.DADataset(valid_path, transform=transform,num_shot=10, is_valid_file=utils.is_file_not_corrupted,
                                scale_factor=scale_factor, mode='train')
     validloader = torch.utils.data.DataLoader(validset, batch_size=batch_size, shuffle=False, num_workers=0)
     print("Found " + str(len(validloader) * batch_size) + " images in " + valid_path, flush=True)
@@ -227,7 +227,7 @@ def finetuneMaml(train_path, valid_path, batch_size, epoch_nb, learning_rate, me
 
 def model_train(train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=None, save_weights='weights.pt', model_name='EDSR'):
     verbose = True
-    
+    print(train_path)
     
     if model_name == 'EDSR':
         super_res_model = EDSR().to(device)
