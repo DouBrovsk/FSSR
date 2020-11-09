@@ -227,7 +227,6 @@ def finetuneMaml(train_path, valid_path, batch_size, epoch_nb, learning_rate, me
 
 def model_train(train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=None, save_weights='weights.pt', model_name='EDSR'):
     verbose = True
-    print(train_path)
     
     if model_name == 'EDSR':
         super_res_model = EDSR().to(device)
