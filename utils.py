@@ -1,5 +1,5 @@
 import imghdr
-import os
+import sys
 from PIL import Image
 import os
 import torch
@@ -22,6 +22,17 @@ def show_image(input_tensor, n=0):
 def is_file_not_corrupted(path):
     return (imghdr.what(path) == 'jpeg' or imghdr.what(
         path) == 'png')  # Checks the first bytes of the file to see if it's a valid png/jpeg
+    
+class Logger(object):
+    def __init__(self,name):
+        self.file=open(name,'a')
+        
+    def write(self,msg):
+        sys.stdout.write(msg)
+        self.file.write(msg)
+        
+    def __del__(self):
+        self.file.close()
 
 
 class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data Augmentation. It's very bad if used for validation because it means the validation set is changing at every epoch -> Refrain from using this for validation.
