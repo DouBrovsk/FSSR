@@ -31,6 +31,9 @@ class Logger(object):
         sys.stdout.write(msg)
         self.file.write(msg)
         
+    def flush(self):
+        pass
+        
     def __del__(self):
         self.file.close()
 
