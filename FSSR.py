@@ -225,8 +225,11 @@ def finetuneMaml(train_path, valid_path, batch_size, epoch_nb, learning_rate, me
 
     return
 
-def model_train(train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=None, save_weights='weights.pt', model_name='EDSR'):
+def model_train(logger_name,train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=None, save_weights='weights.pt', model_name='EDSR'):
     verbose = True
+    logger = utils.Logger('%s.log' % logger_name)
+    print('Logger:[%s]' % logger_name, file=logger)
+    
     
     if model_name == 'EDSR':
         super_res_model = EDSR().to(device)
@@ -266,8 +269,9 @@ def model_train(train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=N
                 running_loss += loss.item()
                 verbose_loss += loss.item()
                 if i% 100 == 0 and i !=0:
-                    print("Loss over last 100 batches: " + str(verbose_loss/(100*batch_size)), flush=True)
+                    print("Loss over last 100 batches: " + str(verbose_loss/(100*batch_size)), flush=True,file=logger)
                     verbose_loss = 0.0
+                    
 
             # Verbose 2
             if verbose:
@@ -275,7 +279,7 @@ def model_train(train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=N
                 print(" ", flush=True)
                 print(" ", flush=True)
                 print("****************")
-                print('Training Loss: {:.7f}'.format(epoch_loss), flush=True)
+                print('Training Loss: {:.7f}'.format(epoch_loss), flush=True,file=logger)
             # Validation
             running_loss = 0.0
             verbose_loss = 0.0
@@ -289,7 +293,7 @@ def model_train(train_path, valid_path, epoch_nb=1, batch_size=1, load_weights=N
                 # Verbose 3
                 if verbose:
                     epoch_loss = running_loss / (valid_size*batch_size)
-                    print('Validation Loss: {:.7f}'.format(epoch_loss), flush=True)
+                    print('Validation Loss: {:.7f}'.format(epoch_loss), flush=True,file=logger)
 
             # Copy the model if it gets better with validation
             if epoch_loss < best_loss:
