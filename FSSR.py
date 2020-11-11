@@ -245,6 +245,23 @@ def model_train(logger_name,train_path, valid_path, epoch_nb=1, batch_size=1, lo
         train_size = len(trainloader)
         valid_size = len(validloader)
         print("Training start", flush=True)
+        
+        
+        #first validation pass to get initial validation loss (util when FT)
+        running_loss = 0.0
+        with torch.no_grad():
+            for i, data in enumerate(validloader):
+                query, label =  data[2].to(device), data[3].to(device)
+                query = model(query)
+                loss = F.mse_loss(query, label)
+                    running_loss += loss.item()
+            # Verbose 3
+            if verbose:
+                epoch_loss = running_loss / (valid_size*batch_size)
+                print('Initial Validation Loss: {:.7f}'.format(epoch_loss), flush=True,file=logger)
+
+        
+        
 
         for epoch in range(epochs_nb):
             # Verbose 1
