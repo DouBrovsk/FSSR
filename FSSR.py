@@ -22,7 +22,9 @@ warnings.filterwarnings("ignore", message="torch.gels is deprecated in favour of
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ## General purpose functions
-def MAMLtrain(model, epochs_nb, trainloader, validloader, batch_size=1, verbose=True):
+def MAMLtrain(logger_name,model, epochs_nb, trainloader, validloader, batch_size=1, verbose=True):
+    logger = utils.Logger('%s.log' % logger_name)
+    print('Logger:[%s]' % logger_name, file=logger)
     since = time.time()
     best_model = copy.deepcopy(model.state_dict())
     best_loss = 6500000.0
@@ -50,7 +52,7 @@ def MAMLtrain(model, epochs_nb, trainloader, validloader, batch_size=1, verbose=
             running_loss += loss
             verbose_loss += loss
             if i % 100 == 0 and i != 0:
-                print("Loss over last 100 batches: " + str(verbose_loss / (100 * batch_size)), flush=True)
+                print("Loss over last 100 batches: " + str(verbose_loss / (100 * batch_size)), flush=True,file=logger)
                 verbose_loss = 0.0
 
         # Verbose 2
@@ -59,7 +61,7 @@ def MAMLtrain(model, epochs_nb, trainloader, validloader, batch_size=1, verbose=
             print(" ", flush=True)
             print(" ", flush=True)
             print("****************")
-            print('Training Loss: {:.7f}'.format(epoch_loss), flush=True)
+            print('Training Loss: {:.7f}'.format(epoch_loss), flush=True,file=logger)
         # Validation
         running_loss = 0.0
         verbose_loss = 0.0
@@ -73,7 +75,7 @@ def MAMLtrain(model, epochs_nb, trainloader, validloader, batch_size=1, verbose=
         # Verbose 3
         if verbose:
             epoch_loss = running_loss / (valid_size * batch_size)
-            print('Validation Loss: {:.7f}'.format(epoch_loss), flush=True)
+            print('Validation Loss: {:.7f}'.format(epoch_loss), flush=True,file=logger)
 
         # Copy the model if it gets better with validation
         if epoch_loss < best_loss:
