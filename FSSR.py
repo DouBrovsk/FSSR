@@ -45,7 +45,7 @@ def MAMLtrain(logger_name,model, epochs_nb, trainloader, validloader, batch_size
             support_data, support_label, query_data, query_label = data[0].to(device), data[1].to(device), data[2].to(
                 device), data[3].to(device)
             loss = model(support_data, support_label, query_data, query_label)
-            print(loss)
+            print("Task" + str(i) + " loss: " + str(loss), flush=True,file=logger)
 
             if i % 20 == 0:
                 print("Batch " + str(i) + " / " + str(int(train_size)), flush=True)

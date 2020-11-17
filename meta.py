@@ -310,8 +310,8 @@ class Meta(nn.Module):
         task_num, setsz, c_, h, w = x_spt.size()
         # The number of tasks handled is basically the batch size. Default will be = 1.
 
-        losses_q = [0 for _ in range(self.update_step + 1)]  # losses_q[i] is the loss on step i
-
+        losses_q = [0 for _ in range(self.update_step + 1)]# losses_q[i] is the loss on step i
+        print("tasknum="+str(task_num))
         for i in range(task_num):
 
             # 1. run the i-th task and compute loss for k=0
@@ -328,7 +328,7 @@ class Meta(nn.Module):
                 loss_q = self.loss_func(reconstructed_q, y_qry)
                 losses_q[0] += loss_q
 
-            # this is the loss and accuracy after the first update
+            # this is the loss after the first update
             with torch.no_grad():
                 # [setsz, nway]
                 reconstructed_q = self.net(x_qry, fast_weights, bn_training=True) # updated weights
