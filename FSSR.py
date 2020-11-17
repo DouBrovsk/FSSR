@@ -110,7 +110,7 @@ def meta_train(logger_name,train_path, valid_path, batch_size, epoch_nb, learnin
 
     config = autoencoder.getconfig()
 
-    meta_learner = Meta(config, learning_rate, meta_learning_rate, 10, 10).to(device)
+    meta_learner = Meta(config, learning_rate, meta_learning_rate, 10, 10,k_support=num_shot).to(device)
 
     transform = torchvision.transforms.Compose([transforms.ToTensor()])
 

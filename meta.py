@@ -311,8 +311,8 @@ class Meta(nn.Module):
         # The number of tasks handled is basically the batch size. Default will be = 1.
 
         losses_q = [0 for _ in range(self.update_step + 1)]# losses_q[i] is the loss on step i
-        print("tasknum="+str(task_num))
-        for i in range(task_num):
+        print("num of images in task="+str(k_spt))
+        for i in range(self.k_spt):
 
             # 1. run the i-th task and compute loss for k=0
             #print(grid)
