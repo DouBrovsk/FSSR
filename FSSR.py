@@ -45,7 +45,7 @@ def MAMLtrain(logger_name,model, epochs_nb, trainloader, validloader, batch_size
             support_data, support_label, query_data, query_label = data[0].to(device), data[1].to(device), data[2].to(
                 device), data[3].to(device)
             loss = model(support_data, support_label, query_data, query_label)
-            print("Task" + str(i) + " loss: " + str(loss), flush=True,file=logger)
+            print("Training Loss : " + str(loss), flush=True,file=logger)
 
             if i % 20 == 0:
                 print("Batch " + str(i) + " / " + str(int(train_size)), flush=True)
@@ -63,7 +63,7 @@ def MAMLtrain(logger_name,model, epochs_nb, trainloader, validloader, batch_size
             print(" ", flush=True)
             print(" ", flush=True)
             print("****************")
-            print('Training Loss: {:.7f}'.format(epoch_loss), flush=True,file=logger)
+            print('Training Loss over the epoch: {:.7f}'.format(epoch_loss), flush=True,file=logger)
         # Validation
         running_loss = 0.0
         verbose_loss = 0.0
@@ -112,7 +112,7 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
 
     config = autoencoder.getconfig()
 
-    meta_learner = Meta(config, learning_rate, meta_learning_rate, 10, 10).to(device)
+    meta_learner = Meta(logger_name,config, learning_rate, meta_learning_rate, 10, 10).to(device)
 
     transform = torchvision.transforms.Compose([transforms.ToTensor()])
 

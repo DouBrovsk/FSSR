@@ -253,12 +253,13 @@ class Meta(nn.Module):
     """
     Meta Learner
     """
-    def __init__(self, config, update_lr, meta_lr, update_step, update_step_test, k_support=10, load_weights='', finetune_param_nb=0, loss_func='MSE'):
+    def __init__(self, logger_name,config, update_lr, meta_lr, update_step, update_step_test, k_support=10, load_weights='', finetune_param_nb=0, loss_func='MSE'):
         """
         :param args:
         """
         super(Meta, self).__init__()
 
+        self.log = logger_name
         self.update_lr = update_lr
         self.meta_lr = meta_lr
         self.k_spt = k_support
@@ -349,10 +350,12 @@ class Meta(nn.Module):
                 reconstructed_q = self.net(x_qry, fast_weights, bn_training=True)
                 # loss_q will be overwritten and just keep the loss_q on last update step.
                 loss_q = self.loss_func(reconstructed_q, y_qry)
+                
                 losses_q[k + 1] += loss_q
                 del reconstructed_q
                 del reconstructed
-
+            
+            print("Task" + str(i) + " loss: " + str(loss_q), flush=True,file=self.log)
         # end of all tasks
         # sum over all losses on query set across all tasks
         loss_q = losses_q[-1] / task_num
