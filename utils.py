@@ -39,7 +39,7 @@ class Logger(object):
 
 
 class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data Augmentation. It's very bad if used for validation because it means the validation set is changing at every epoch -> Refrain from using this for validation.
-    def __init__(self, images_directory, num_shot, transform, is_valid_file=is_file_not_corrupted, scale_factor=2,
+    def __init__(self, images_directory, transform, num_shot, is_valid_file=is_file_not_corrupted, scale_factor=2,
                  memory_fit_factor=4, mode='train'):
         self.is_valid_file = is_valid_file
         self.image_paths = [os.path.join(images_directory, f) for f in os.listdir(images_directory) if
