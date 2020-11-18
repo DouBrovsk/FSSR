@@ -49,8 +49,10 @@ def MAMLtrain(logger_name,model, epochs_nb, trainloader, validloader, batch_size
 
             if i % 20 == 0:
                 print("Batch " + str(i) + " / " + str(int(train_size)), flush=True)
+                
             running_loss += loss
             verbose_loss += loss
+            
             if i % 100 == 0 and i != 0:
                 print("Loss over last 100 batches: " + str(verbose_loss / (100 * batch_size)), flush=True,file=logger)
                 verbose_loss = 0.0
@@ -99,7 +101,7 @@ def makeCheckpoint(model, save_path, verbose=True):  # Function to save weights
 
 
 ### Different Modes
-def meta_train(logger_name,train_path, valid_path, batch_size, epoch_nb, learning_rate, meta_learning_rate, save_path, verbose, weights_load=None, loss_func='MSE', loss_network='vgg16', network='EDSR', num_shot=10):
+def meta_train(logger_name,train_path, valid_path, batch_size, epoch_nb, learning_rate, meta_learning_rate, save_path, verbose, weights_load=None, loss_func='MSE', loss_network='vgg16', network='EDSR', num_shot=num_shot):
 
     ## Init training
     scale_factor = 2
@@ -110,16 +112,16 @@ def meta_train(logger_name,train_path, valid_path, batch_size, epoch_nb, learnin
 
     config = autoencoder.getconfig()
 
-    meta_learner = Meta(config, learning_rate, meta_learning_rate, 10, 10,k_support=num_shot).to(device)
+    meta_learner = Meta(config, learning_rate, meta_learning_rate, 10, 10).to(device)
 
     transform = torchvision.transforms.Compose([transforms.ToTensor()])
 
     # Data loading
-    trainset = utils.DADataset(train_path, transform=transform, num_shot=10, is_valid_file=utils.is_file_not_corrupted, scale_factor=scale_factor, mode='train')
+    trainset = utils.DADataset(train_path, transform=transform, num_shot=num_shot, is_valid_file=utils.is_file_not_corrupted, scale_factor=scale_factor, mode='train')
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=4) # Batch must be composed of images of the same size if >1
     print("Found " + str(len(trainloader)*batch_size) + " images in " + train_path, flush=True)
 
-    validset = utils.DADataset(valid_path, transform=transform,num_shot=10,is_valid_file=utils.is_file_not_corrupted, scale_factor=scale_factor, mode='train')
+    validset = utils.DADataset(valid_path, transform=transform,num_shot=num_shot,is_valid_file=utils.is_file_not_corrupted, scale_factor=scale_factor, mode='train')
     validloader = torch.utils.data.DataLoader(validset, batch_size=batch_size, shuffle=False, num_workers=4)
     print("Found " + str(len(validloader)*batch_size) + " images in " + valid_path, flush=True)
 
