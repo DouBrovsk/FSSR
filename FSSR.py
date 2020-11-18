@@ -101,7 +101,7 @@ def makeCheckpoint(model, save_path, verbose=True):  # Function to save weights
 
 
 ### Different Modes
-def meta_train(logger_name,train_path, valid_path, batch_size, epoch_nb, learning_rate, meta_learning_rate, save_path, verbose, weights_load=None, loss_func='MSE', loss_network='vgg16', network='EDSR', num_shot=num_shot):
+def meta_train(logger_name,train_path, valid_path, batch_size, epoch_nb, learning_rate, meta_learning_rate, save_path, verbose, weights_load=None, loss_func='MSE', loss_network='vgg16', network='EDSR', num_shot):
 
     ## Init training
     scale_factor = 2
