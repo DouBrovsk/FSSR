@@ -42,6 +42,7 @@ def MAMLtrain(logger_name,model, epochs_nb, trainloader, validloader, batch_size
         running_loss = 0.0
         verbose_loss = 0.0
         for i, data in enumerate(trainloader):
+            print(data.size[0].size())
             support_data, support_label, query_data, query_label = data[0].to(device), data[1].to(device), data[2].to(
                 device), data[3].to(device)
             loss = model(support_data, support_label, query_data, query_label)
