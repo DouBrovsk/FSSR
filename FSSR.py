@@ -123,6 +123,8 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
                                scale_factor=scale_factor, mode='train')
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=4) # Batch must be composed of images of the same size if >1
     print("Found " + str(len(trainloader)*batch_size) + " images in " + train_path, flush=True)
+    print(len(trainloader))
+    print (batch_size)
 
     validset = utils.DADataset(valid_path, transform=transform,num_shot=num_shot,is_valid_file=utils.is_file_not_corrupted, 
                                scale_factor=scale_factor, mode='train')
