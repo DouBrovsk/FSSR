@@ -101,7 +101,8 @@ def makeCheckpoint(model, save_path, verbose=True):  # Function to save weights
 
 
 ### Different Modes
-def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb, learning_rate, meta_learning_rate, save_path, verbose, weights_load=None, loss_func='MSE', loss_network='vgg16', network='EDSR'):
+def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb, learning_rate, meta_learning_rate, save_path, 
+               verbose, weights_load=None, loss_func='MSE', loss_network='vgg16', network='EDSR'):
 
     ## Init training
     scale_factor = 2
@@ -117,11 +118,13 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
     transform = torchvision.transforms.Compose([transforms.ToTensor()])
 
     # Data loading
-    trainset = utils.DADataset(train_path, transform=transform, num_shot=num_shot, is_valid_file=utils.is_file_not_corrupted, scale_factor=scale_factor, mode='train')
+    trainset = utils.DADataset(train_path, transform=transform, num_shot=num_shot, is_valid_file=utils.is_file_not_corrupted, 
+                               scale_factor=scale_factor, mode='train')
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=4) # Batch must be composed of images of the same size if >1
     print("Found " + str(len(trainloader)*batch_size) + " images in " + train_path, flush=True)
 
-    validset = utils.DADataset(valid_path, transform=transform,num_shot=num_shot,is_valid_file=utils.is_file_not_corrupted, scale_factor=scale_factor, mode='train')
+    validset = utils.DADataset(valid_path, transform=transform,num_shot=num_shot,is_valid_file=utils.is_file_not_corrupted, 
+                               scale_factor=scale_factor, mode='train')
     validloader = torch.utils.data.DataLoader(validset, batch_size=batch_size, shuffle=False, num_workers=4)
     print("Found " + str(len(validloader)*batch_size) + " images in " + valid_path, flush=True)
 
@@ -152,7 +155,8 @@ def MAMLupscale(in_path, out_path, weights_path, learning_rate, batch_size, verb
 
     config = model.getconfig()
 
-    meta_learner = Meta(config, learning_rate, 0, 10, 10) # Meta learning rate = 0 so no update is performed at test time. Anyway, it doesn't matter which value is given here because it won't be used at test time.
+    meta_learner = Meta(config, learning_rate, 0, 10, 10) # Meta learning rate = 0 so no update is performed at test time. 
+    #Anyway, it doesn't matter which value is given here because it won't be used at test time.
     meta_learner.load_state_dict(torch.load(weights_path))
 
     del model

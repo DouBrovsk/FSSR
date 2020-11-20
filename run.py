@@ -15,7 +15,7 @@ if __name__ == "__main__":
     parser.add_argument('--verbose', default=True, type=bool, choices=[True, False], help="Wether the script print info in stdout.")
     parser.add_argument('--network_name',  default='EDSR', choices=['EDSR'], help="Indicates which network is being used.")
     parser.add_argument('--logger_name',  default='log', help="Name of the logger.")
-    parser.add_argument('--num_shot',  default=10, help="number of images in the support per task")
+    parser.add_argument('--num_shot',  default=10, type=int, help="number of images in the support per task")
     parser.add_argument('--batch_size', default=1, type=int, help="Batch size i.e the number of images for each training iteration as an integer.")
 
     parser.add_argument('--load_weights', default=None, help="Path to the weights to continue training, perform upscaling on a set of images or evaluate performance.")
@@ -32,18 +32,39 @@ if __name__ == "__main__":
     
 
     if opt.mode == 'meta_train':
-        meta_train(logger_name=opt.logger_name,train_path=opt.train_folder, valid_path=opt.valid_folder, batch_size=opt.batch_size,num_shot=opt.num_shot, epoch_nb=opt.epoch_nb, learning_rate=opt.learning_rate, meta_learning_rate=opt.meta_learning_rate, save_path=opt.save_weights, verbose=opt.verbose, weights_load=opt.load_weights, loss_func=opt.loss, loss_network=opt.loss_network, network=opt.network_name)
+        meta_train(logger_name=opt.logger_name,train_path=opt.train_folder, 
+                   valid_path=opt.valid_folder, batch_size=opt.batch_size,
+                   num_shot=opt.num_shot, epoch_nb=opt.epoch_nb, 
+                   learning_rate=opt.learning_rate, meta_learning_rate=opt.meta_learning_rate, 
+                   save_path=opt.save_weights, verbose=opt.verbose, weights_load=opt.load_weights, 
+                   loss_func=opt.loss, loss_network=opt.loss_network, network=opt.network_name)
+        
     elif opt.mode == 'finetune_maml':
-        finetuneMaml(train_path=opt.train_folder, valid_path=opt.valid_folder, batch_size=opt.batch_size, epoch_nb=opt.epoch_nb, learning_rate=opt.learning_rate, meta_learning_rate=opt.meta_learning_rate, load_weights=opt.load_weights, save_weights=opt.save_weights, finetune_depth=opt.finetune_depth, network=opt.network_name)
+        finetuneMaml(train_path=opt.train_folder, valid_path=opt.valid_folder,
+                     batch_size=opt.batch_size, epoch_nb=opt.epoch_nb, 
+                     learning_rate=opt.learning_rate, meta_learning_rate=opt.meta_learning_rate, 
+                     load_weights=opt.load_weights, save_weights=opt.save_weights, 
+                     finetune_depth=opt.finetune_depth, network=opt.network_name)
+        
     elif opt.mode == 'meta_upscale':
-        MAMLupscale(in_path=opt.input, out_path=opt.output, weights_path=opt.load_weights, learning_rate=opt.learning_rate, batch_size=opt.batch_size, verbose=opt.verbose, device_name=opt.device, network=opt.network_name)
+        MAMLupscale(in_path=opt.input, out_path=opt.output, weights_path=opt.load_weights, 
+                    learning_rate=opt.learning_rate, batch_size=opt.batch_size, 
+                    verbose=opt.verbose, device_name=opt.device, network=opt.network_name)
+        
     elif opt.mode == 'evaluation':
         evaluation(in_path=opt.input, out_path=opt.output, verbose=True)
+        
     elif opt.mode == 'upscale_video':
         pass
+    
     elif opt.mode == 'model_train':
-        model_train(logger_name=opt.logger_name,train_path=opt.train_folder, valid_path=opt.valid_folder, epoch_nb=opt.epoch_nb, batch_size=opt.batch_size, load_weights=opt.load_weights, save_weights=opt.save_weights)
+        model_train(logger_name=opt.logger_name,train_path=opt.train_folder, 
+                    valid_path=opt.valid_folder, epoch_nb=opt.epoch_nb, 
+                    batch_size=opt.batch_size, load_weights=opt.load_weights, 
+                    save_weights=opt.save_weights)
+        
     elif opt.mode == 'upscale':
         upscale(load_weights=opt.load_weights, input=opt.input, out=opt.output)
+        
     else:
         raise Exception("Invalid mode. Run this command if you need help: $ python run.py --help")
