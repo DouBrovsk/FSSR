@@ -43,8 +43,11 @@ def MAMLtrain(logger_name,model, epochs_nb, trainloader, validloader, batch_size
         verbose_loss = 0.0
         for i, data in enumerate(trainloader):
             
-            support_data, support_label, query_data, query_label = data[0].to(device), data[1].to(device), data[2].to(
-                device), data[3].to(device)
+            support_data = data[0].to(device)
+            support_label= data[1].to(device)
+            query_data = data[2].to(device)
+            query_label = data[3].to(device)
+            
             loss = model(support_data, support_label, query_data, query_label)
             print("Training Loss : " + str(loss), flush=True,file=logger)
 
@@ -125,11 +128,14 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
     print("Found " + str(len(trainloader)*batch_size) + " images in " + train_path, flush=True)
     print(len(trainloader))
     print (batch_size)
+    print("spt_data.shape = " + trainloader[0][0].shape)
+    print("qry_data.shape = " + trainloader[0][2].shape)
 
     validset = utils.DADataset(valid_path, transform=transform,num_shot=num_shot,is_valid_file=utils.is_file_not_corrupted, 
                                scale_factor=scale_factor, mode='train')
     validloader = torch.utils.data.DataLoader(validset, batch_size=batch_size, shuffle=False, num_workers=4)
     print("Found " + str(len(validloader)*batch_size) + " images in " + valid_path, flush=True)
+    
 
     if weights_load is not None: # Load weights for further training if a path was given.
         meta_learner.load_state_dict(torch.load(weights_load))
@@ -177,8 +183,7 @@ def MAMLupscale(in_path, out_path, weights_path, learning_rate, batch_size, verb
     since = time.time()
     for i, data in enumerate(testloader):
 
-        support_data, support_label, query_data, query_label = data[0].to(device), data[1].to(device), data[2].to(
-            device), data[3].to(device)
+        support_data, support_label, query_data, query_label = data[0].to(device), data[1].to(device), data[2].to(device), data[3].to(device)
         query_label = query_label.squeeze(0)
         support_data, support_label = support_data.squeeze(0), support_label.squeeze(0)
 

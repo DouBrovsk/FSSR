@@ -355,7 +355,9 @@ class Meta(nn.Module):
                 del reconstructed_q
                 del reconstructed
             
-            #mprint("Task" + str(i) + " loss: " + str(loss_q), flush=True,file=self.log)
+            #print("Task" + str(i) + " loss: " + str(loss_q), flush=True,file=self.log)
+            
+            
         # end of all tasks
         # sum over all losses on query set across all tasks
         loss_q = losses_q[-1] / task_num
