@@ -129,7 +129,7 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
     print(len(trainloader))
     print (batch_size)
     for data in trainloader:
-        print(data[0].shape)
+        
     #print("spt_data.shape = " + trainloader[0][0].shape)
     #print("qry_data.shape = " + trainloader[0][2].shape)
 
