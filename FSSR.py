@@ -128,7 +128,6 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
     print("Found " + str(len(trainloader)*batch_size) + " images in " + train_path, flush=True)
     print(len(trainloader))
     print (batch_size)
-    for data in trainloader:
         
     #print("spt_data.shape = " + trainloader[0][0].shape)
     #print("qry_data.shape = " + trainloader[0][2].shape)
