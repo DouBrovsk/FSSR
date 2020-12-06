@@ -87,7 +87,11 @@ class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data 
              transforms.RandomVerticalFlip(0.3)])
         for i in range(self.num_shot):
             transformed_img = augmentation(original) # chaque appel de augmentation redefinit une nouvelle transformation !
-            support_label.append(self.transform(transformed_img))
+            
+            support_label.append(self.transform(
+                transforms.Resize((resize_height, resize_width),
+                                  interpolation=Image.BICUBIC)(transformed_img)))
+            
             support_data.append(self.transform(
                 transforms.Resize((resize_height // self.scale_factor, resize_width // self.scale_factor),
                                   interpolation=Image.BICUBIC)(transformed_img)))
