@@ -40,7 +40,7 @@ class Logger(object):
 
 class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data Augmentation. It's very bad if used for validation because it means the validation set is changing at every epoch -> Refrain from using this for validation.
     def __init__(self, images_directory, transform, num_shot, is_valid_file=is_file_not_corrupted, scale_factor=2,
-                 memory_fit_factor=4, mode='train'):
+                 memory_fit_factor=4, mode='no_spaghetis'):
         self.is_valid_file = is_valid_file
         self.image_paths = [os.path.join(images_directory, f) for f in os.listdir(images_directory) if
                             self.is_valid_file(os.path.join(images_directory, f))]
@@ -86,7 +86,7 @@ class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data 
              transforms.RandomHorizontalFlip(0.3),
              transforms.RandomVerticalFlip(0.3)])
         for i in range(self.num_shot):
-            transformed_img = augmentation(original)
+            transformed_img = augmentation(original) # chaque appel de augmentation redefinit une nouvelle transformation !
             support_label.append(self.transform(transformed_img))
             support_data.append(self.transform(
                 transforms.Resize((resize_height // self.scale_factor, resize_width // self.scale_factor),
@@ -94,8 +94,7 @@ class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data 
 
         query_data = self.transform(
             transforms.Resize((resize_height // self.scale_factor, resize_width // self.scale_factor),
-                              interpolation=Image.BICUBIC)(
-                original))  # ToDo: Change code to make the set more customizable?
+                              interpolation=Image.BICUBIC)(original))  # ToDo: Change code to make the set more customizable?
         del original
         if self.mode == 'train':
             return torch.stack(support_data), torch.stack(support_label), query_data, query_label

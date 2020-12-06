@@ -123,7 +123,7 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
 
     # Data loading
     trainset = utils.DADataset(train_path, transform=transform, num_shot=num_shot, is_valid_file=utils.is_file_not_corrupted, 
-                               scale_factor=scale_factor, mode='train')
+                               scale_factor=scale_factor)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=4) # Batch must be composed of images of the same size if >1
     print("Found " + str(len(trainloader)*batch_size) + " images in " + train_path, flush=True)
     print(len(trainloader))
@@ -133,7 +133,7 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
     #print("qry_data.shape = " + trainloader[0][2].shape)
 
     validset = utils.DADataset(valid_path, transform=transform,num_shot=num_shot,is_valid_file=utils.is_file_not_corrupted, 
-                               scale_factor=scale_factor, mode='train')
+                               scale_factor=scale_factor)
     validloader = torch.utils.data.DataLoader(validset, batch_size=batch_size, shuffle=False, num_workers=4)
     print("Found " + str(len(validloader)*batch_size) + " images in " + valid_path, flush=True)
     
@@ -233,6 +233,7 @@ def finetuneMaml(train_path, valid_path, batch_size, epoch_nb, learning_rate, me
                                scale_factor=scale_factor, mode='train')
     validloader = torch.utils.data.DataLoader(validset, batch_size=batch_size, shuffle=False, num_workers=0)
     print("Found " + str(len(validloader) * batch_size) + " images in " + valid_path, flush=True)
+    
     meta_learner = Meta(config, learning_rate, meta_learning_rate, 10, 10, load_weights=load_weights).to(device)
     meta_learner = MAMLtrain(meta_learner, epoch_nb, trainloader, validloader, batch_size)
     makeCheckpoint(meta_learner, save_weights)
