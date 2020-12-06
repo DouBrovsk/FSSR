@@ -40,7 +40,7 @@ class Logger(object):
 
 class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data Augmentation. It's very bad if used for validation because it means the validation set is changing at every epoch -> Refrain from using this for validation.
     def __init__(self, images_directory, transform, num_shot, is_valid_file=is_file_not_corrupted, scale_factor=2,
-                 memory_fit_factor=4, mode='no_spaghetis'):
+                 memory_fit_factor=4, mode='train'):
         self.is_valid_file = is_valid_file
         self.image_paths = [os.path.join(images_directory, f) for f in os.listdir(images_directory) if
                             self.is_valid_file(os.path.join(images_directory, f))]
@@ -55,15 +55,15 @@ class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data 
 
         original = Image.open(self.image_paths[index]).convert('RGB')
         width, height = original.width, original.height
-        if self.mode == 'train':
-            resize_height = height // self.memfact
-            resize_width = width // self.memfact
-            while resize_height * resize_width > 393 * 510:  # Spaghetis to avoid too big tensors so it fits into 1 GPU.
-                resize_height -= self.memfact
-                resize_width -= int(self.memfact * (width / height))
-        else:
-            resize_height = height
-            resize_width = width
+        #if self.mode == 'train':
+        #    resize_height = height // self.memfact
+        #    resize_width = width // self.memfact
+        #    while resize_height * resize_width > 393 * 510:  # Spaghetis to avoid too big tensors so it fits into 1 GPU.
+        #        resize_height -= self.memfact
+        #        resize_width -= int(self.memfact * (width / height))
+        #else:
+        resize_height = height
+        resize_width = width
 
         if resize_height % self.scale_factor != 0:
             resize_height -= (resize_height % self.scale_factor)
