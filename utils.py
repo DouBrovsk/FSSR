@@ -62,8 +62,8 @@ class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data 
         #        resize_height -= self.memfact
         #        resize_width -= int(self.memfact * (width / height))
         #else:
-        resize_height = height
-        resize_width = width
+        resize_height = height/4
+        resize_width = width/4
 
         if resize_height % self.scale_factor != 0:
             resize_height -= (resize_height % self.scale_factor)
