@@ -81,7 +81,7 @@ class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data 
             [transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=(-0.1, 0.1)),
              transforms.RandomPerspective(), 
              transforms.RandomRotation((-15, 15)),
-             transforms.RandomResizedCrop((resize_height, resize_width),scale=(0.5, 0.9), interpolation=Image.BICUBIC),
+             #transforms.RandomResizedCrop((resize_height, resize_width),scale=(0.5, 0.9), interpolation=Image.BICUBIC),
              transforms.RandomGrayscale(p=0.02), 
              transforms.RandomHorizontalFlip(0.3),
              transforms.RandomVerticalFlip(0.3)])
