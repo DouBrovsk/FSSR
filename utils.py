@@ -52,7 +52,8 @@ class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data 
         self.mode = mode
 
     def __getitem__(self, index):
-
+        
+        torch.cuda.empty_cache()
         original = Image.open(self.image_paths[index]).convert('RGB')
         width, height = original.width, original.height
         #if self.mode == 'train':

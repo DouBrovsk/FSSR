@@ -49,7 +49,7 @@ def MAMLtrain(logger_name,model, epochs_nb, trainloader, validloader, batch_size
             support_label= data[1].to(device)
             query_data = data[2].to(device)
             query_label = data[3].to(device)
-            torch.cuda.empty_cache()
+            
             
             loss = model(support_data, support_label, query_data, query_label)
             print("Training Loss : " + str(loss), flush=True,file=logger)
