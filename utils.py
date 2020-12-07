@@ -75,6 +75,10 @@ class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data 
         query_label = self.transform(
             transforms.Resize((resize_height, resize_width), interpolation=Image.BICUBIC)(original))
         
+        query_data = self.transform(
+            transforms.Resize((resize_height // self.scale_factor, resize_width // self.scale_factor),
+                              interpolation=Image.BICUBIC)(original))  # ToDo: Change code to make the set more customizable?
+        
         support_label, support_data = [], []
         
         augmentation = transforms.Compose(
@@ -85,6 +89,7 @@ class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data 
              transforms.RandomGrayscale(p=0.02), 
              transforms.RandomHorizontalFlip(0.3),
              transforms.RandomVerticalFlip(0.3)])
+            
         for i in range(self.num_shot):
             transformed_img = augmentation(original) # chaque appel de augmentation redefinit une nouvelle transformation !
             
@@ -96,9 +101,7 @@ class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data 
                 transforms.Resize((resize_height // self.scale_factor, resize_width // self.scale_factor),
                                   interpolation=Image.BICUBIC)(transformed_img)))
 
-        query_data = self.transform(
-            transforms.Resize((resize_height // self.scale_factor, resize_width // self.scale_factor),
-                              interpolation=Image.BICUBIC)(original))  # ToDo: Change code to make the set more customizable?
+        
         del original
         if self.mode == 'train':
             return torch.stack(support_data), torch.stack(support_label), query_data, query_label
