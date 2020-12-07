@@ -102,8 +102,14 @@ class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data 
                                   interpolation=Image.BICUBIC)(transformed_img)))
 
         
+        print(query_label.size())
+        print(query_data.size())
+        
+        
         del original
         if self.mode == 'train':
+            print(torch.stack(support_data).size())
+            print(torch.stack(support_label).size())
             return torch.stack(support_data), torch.stack(support_label), query_data, query_label
         elif self.mode == 'up':
             return torch.stack(support_data), torch.stack(support_label), query_label
