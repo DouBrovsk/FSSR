@@ -105,15 +105,15 @@ class DADataset(torch.utils.data.Dataset):  # Making artificial tasks with Data 
                 transforms.Resize((resize_height // self.scale_factor, resize_width // self.scale_factor),
                                   interpolation=Image.BICUBIC)(transformed_img)))
 
-        
-        print(query_label.size())
-        print(query_data.size())
+        #print('task')
+        #print(query_label.size())
+        #print(query_data.size())
+        #print(torch.stack(support_data).size())
+        #print(torch.stack(support_label).size())
         
         
         del original
         if self.mode == 'train':
-            print(torch.stack(support_data).size())
-            print(torch.stack(support_label).size())
             return torch.stack(support_data), torch.stack(support_label), query_data, query_label
         elif self.mode == 'up':
             return torch.stack(support_data), torch.stack(support_label), query_label

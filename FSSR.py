@@ -45,7 +45,6 @@ def MAMLtrain(logger_name,model, epochs_nb, trainloader, validloader, batch_size
         verbose_loss = 0.0
         for i,data in enumerate(trainloader):
             
-            print('ok')
             
             support_data = data[0].to(device)
             support_label= data[1].to(device)
@@ -147,7 +146,7 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
         meta_learner.load_state_dict(torch.load(weights_load))
         print("Loaded weights from: " + str(weights_load), flush=True)
 
-    print(autoencoder, flush=True)
+    #print(autoencoder, flush=True)
 
     del autoencoder
 
