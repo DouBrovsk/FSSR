@@ -82,6 +82,8 @@ def MAMLtrain(logger_name,model, epochs_nb, trainloader, validloader, batch_size
             query_data = data[2].to(device)
             query_label = data[3].to(device)
             
+            print(support_data.size())
+            
             loss = model.finetuning(support_data, support_label, query_data, query_label)
 
             running_loss += loss
