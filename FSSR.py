@@ -76,8 +76,12 @@ def MAMLtrain(logger_name,model, epochs_nb, trainloader, validloader, batch_size
         running_loss = 0.0
         verbose_loss = 0.0
         for i, data in enumerate(validloader):
-            support_data, support_label, query_data, query_label = data[0].to(device).squeeze(0), data[1].to(
-                device).squeeze(0), data[2].to(device), data[3].to(device)
+            
+            support_data = data[0].to(device)
+            support_label= data[1].to(device)
+            query_data = data[2].to(device)
+            query_label = data[3].to(device)
+            
             loss = model.finetuning(support_data, support_label, query_data, query_label)
 
             running_loss += loss
