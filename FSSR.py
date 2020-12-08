@@ -19,10 +19,11 @@ from finetuner import FineTuner
 warnings.filterwarnings("ignore", message="torch.gels is deprecated in favour of")
 
 # Use GPU if available
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
 
 ## General purpose functions
 def MAMLtrain(logger_name,model, epochs_nb, trainloader, validloader, batch_size=1, verbose=True):
+    
     torch.cuda.empty_cache()
     logger = utils.Logger('%s.log' % logger_name)
     print('Logger:[%s]' % logger_name, file=logger)
