@@ -77,12 +77,11 @@ def MAMLtrain(logger_name,model, epochs_nb, trainloader, validloader, batch_size
         verbose_loss = 0.0
         for i, data in enumerate(validloader):
             
-            support_data = data[0].to(device)
-            support_label= data[1].to(device)
+            support_data = data[0].to(device).squeeze(0)
+            support_label= data[1].to(device).squeeze(0)
             query_data = data[2].to(device)
             query_label = data[3].to(device)
             
-            print(support_data.size())
             
             loss = model.finetuning(support_data, support_label, query_data, query_label)
 
@@ -144,7 +143,7 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
 
     validset = utils.DADataset(valid_path, transform=transform,num_shot=num_shot,is_valid_file=utils.is_file_not_corrupted, 
                                scale_factor=scale_factor)
-    validloader = torch.utils.data.DataLoader(validset, batch_size=batch_size, shuffle=False, num_workers=4)
+    validloader = torch.utils.data.DataLoader(validset, batch_size=1, shuffle=False, num_workers=4)
     print("Found " + str(len(validloader)*batch_size) + " images in " + valid_path, flush=True)
     
 

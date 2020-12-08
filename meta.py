@@ -383,7 +383,7 @@ class Meta(nn.Module):
         :param y_qry:   [querysz, c_, h, w]
         :return:
         """
-        print('x_spt.shape ='+str(len(x_spt.shape)))
+        
         assert len(x_spt.shape) == 4
 
         task_num = x_spt.size()[0]
