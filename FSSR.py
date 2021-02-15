@@ -124,9 +124,9 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
     #if network == 'EDSR':
         #autoencoder = EDSR(scale=scale_factor)
 
-    config = autoencoder.getconfig()
+
     
-    meta_learner = Meta(logger_name,config, learning_rate, meta_learning_rate, 10, 10).to(device)
+    meta_learner = Meta(logger_name, learning_rate, meta_learning_rate, 10, 10).to(device)
     
 
     #transform = torchvision.transforms.Compose([transforms.ToTensor()])

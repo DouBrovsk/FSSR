@@ -436,7 +436,7 @@ class Meta(nn.Module):
     """
     Meta Learner
     """
-    def __init__(self, logger_name,config, update_lr, meta_lr, update_step, update_step_test, k_support=10, load_weights='', finetune_param_nb=0, loss_func='perception'):
+    def __init__(self, logger_name,update_lr, meta_lr, update_step, update_step_test, k_support=10, load_weights='', finetune_param_nb=0, loss_func='perception'):
         """
         :param args:
         """
