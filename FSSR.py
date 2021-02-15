@@ -118,21 +118,21 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
                verbose, weights_load=None, loss_func='MSE', loss_network='vgg16', network='EDSR'):
 
     ## Init training
-    scale_factor = 2
+    #scale_factor = 2
 
     # Setup model and hyper parameters
-    if network == 'EDSR':
-        autoencoder = EDSR(scale=scale_factor)
+    #if network == 'EDSR':
+        #autoencoder = EDSR(scale=scale_factor)
 
-    config = autoencoder.getconfig()
-
+    #config = autoencoder.getconfig()
+    
     meta_learner = Meta(logger_name,config, learning_rate, meta_learning_rate, 10, 10).to(device)
+    
 
-    transform = torchvision.transforms.Compose([transforms.ToTensor()])
+    #transform = torchvision.transforms.Compose([transforms.ToTensor()])
 
     # Data loading
-    trainset = utils.DADataset(train_path, transform=transform, num_shot=num_shot, is_valid_file=utils.is_file_not_corrupted, 
-                               scale_factor=scale_factor)
+    trainset = utils.ColorDataset(train_path)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=4) # Batch must be composed of images of the same size if >1
     print("Found " + str(len(trainloader)*batch_size) + " images in " + train_path, flush=True)
     print(len(trainloader))
@@ -141,8 +141,7 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
     #print("spt_data.shape = " + trainloader[0][0].shape)
     #print("qry_data.shape = " + trainloader[0][2].shape)
 
-    validset = utils.DADataset(valid_path, transform=transform,num_shot=num_shot,is_valid_file=utils.is_file_not_corrupted, 
-                               scale_factor=scale_factor)
+    validset = utils.ColorDataset(valid_path)
     validloader = torch.utils.data.DataLoader(validset, batch_size=1, shuffle=False, num_workers=4)
     print("Found " + str(len(validloader)*batch_size) + " images in " + valid_path, flush=True)
     
@@ -153,7 +152,7 @@ def meta_train(logger_name,train_path, valid_path, batch_size,num_shot, epoch_nb
 
     #print(autoencoder, flush=True)
 
-    del autoencoder
+    #del autoencoder
 
     # Start training
     meta_learner = MAMLtrain(logger_name,meta_learner, epoch_nb, trainloader, validloader, batch_size=batch_size)

@@ -6,12 +6,27 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
+import numpy as np
+from skimage.color import rgb2lab, lab2rgb
 
 #import Augmentor  # Data augmentation library
 
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 
+def encode_313bin(data_ab_ss, nn_enc):
+    '''Encode to 313bin
+    Args:
+    data_ab_ss: [N, H, W, 2]
+    Returns:
+    gt_ab_313 : [N, H, W, 313]
+    '''
+
+    data_ab_ss = np.transpose(data_ab_ss, (0, 3, 1, 2))
+    gt_ab_313 = nn_enc.encode_points_mtx_nd(data_ab_ss, axis=1)
+
+    gt_ab_313 = np.transpose(gt_ab_313, (0, 2, 3, 1))
+    return gt_ab_313
 ## Utils
 def show_image(input_tensor, n=0):
     y = input_tensor.detach()[n].cpu().numpy().transpose((1, 2, 0))
@@ -175,4 +190,90 @@ class FSDataset(torch.utils.data.Dataset):
 
     def __len__(self):
         return self.length
+    
+    
+class ColorDataset(torch.utils.data.Dataset):
+    '''
+    Assuming classes_folder_path is a directory containing folders of N images of the same category,
+    We take N-1 images for the support set and 1 image for the query set.
+    The support set is composed of N-1 couples of images (greyscale_image, original_image).
+    The query set is composed of 1 image couple (greyscale_image, original image).
+    In this setup, it is a N-1 shot (1 way) colorization task.
+    '''
+
+    def __init__(self, classes_folder_path):
+        
+        self.class_paths = [os.path.join(classes_folder_path, f) for f in os.listdir(classes_folder_path) if os.path.isdir(os.path.join(classes_folder_path, f)) and len(os.listdir(os.path.join(classes_folder_path, f))) > 2]
+        self.length = len(self.class_paths)
+        
+
+    def __getitem__(self, index):  # ToDO: Implement the method.
+        transform = transforms.ToTensor()
+        folder = self.class_paths[index]
+        files = [os.path.join(folder, f) for f in os.listdir(folder)]
+        support, support_l = [], []
+        for i in range(len(files) - 1):
+            rgb_image = Image.open(files[i]).convert('RGB')
+            w, h = rgb_image.size
+            if w != h:
+                min_val = min(w, h)
+                rgb_image = rgb_image.crop((w // 2 - min_val // 2, h // 2 - min_val // 2, w // 2 + min_val // 2, h // 2 + min_val // 2))
+        
+            rgb_image = np.array(rgb_image.resize((self.img_size, self.img_size), Image.LANCZOS))
+        
+            lab_image = rgb2lab(rgb_image)
+            l_image = lab_image[:,:,:1]
+            ab_image = lab_image[:,:,1:]
+        
+            if self.color_info == 'dist':
+                color_feat = encode_313bin(np.expand_dims(ab_image, axis = 0), self.nnenc)[0]
+                color_feat = np.mean(color_feat, axis = (0, 1))
+            
+            support_l.append(transform(rgb_image))
+            
+            gray_image = [lab_image[:,:,:1]]
+            h, w, c = lab_image.shape
+            gray_image.append(np.zeros(shape = (h, w, 2)))
+            gray_image = np.concatenate(gray_image, axis = 2)
+        
+            support.append(transform(gray_image))
+            
+        support = torch.stack(support)
+        support_l = torch.stack(support_l)
+
+
+        rgb_image = Image.open(files[-1]).convert('RGB')
+        w, h = rgb_image.size
+        if w != h:
+            min_val = min(w, h)
+            rgb_image = rgb_image.crop((w // 2 - min_val // 2, h // 2 - min_val // 2, w // 2 + min_val // 2, h // 2 + min_val // 2))
+    
+        rgb_image = np.array(rgb_image.resize((self.img_size, self.img_size), Image.LANCZOS))
+    
+        lab_image = rgb2lab(rgb_image)
+        l_image = lab_image[:,:,:1]
+        ab_image = lab_image[:,:,1:]
+    
+        if self.color_info == 'dist':
+            color_feat = encode_313bin(np.expand_dims(ab_image, axis = 0), self.nnenc)[0]
+            color_feat = np.mean(color_feat, axis = (0, 1))
+        
+        query_l = (transform(rgb_image))
+        
+        gray_image = [lab_image[:,:,:1]]
+        h, w, c = lab_image.shape
+        gray_image.append(np.zeros(shape = (h, w, 2)))
+        gray_image = np.concatenate(gray_image, axis = 2)
+    
+        query = (transform(gray_image))
+        
+        
+        return support, support_l, query, query_l
+        
+
+
+    def __len__(self):
+        return self.length
+    
+        
     
