@@ -516,7 +516,7 @@ class Meta(nn.Module):
             #print(grid)
             #reconstructed = self.net(x_spt[i], vars=None, bn_training=True)
             
-            lab_image = rgb2lab(np.array(x_spt[i].permute(1,3).cpu()))
+            lab_image = rgb2lab(np.array(x_spt[i].permute(0,3,2,1).cpu()))
             ab_image = lab_image[:,:,1:]
             color_feat = encode_313bin(np.expand_dims(ab_image, axis = 0), self.nnenc)[0]
             color_feat = np.mean(color_feat, axis = (0, 1))
