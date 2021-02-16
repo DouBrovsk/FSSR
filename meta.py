@@ -515,7 +515,8 @@ class Meta(nn.Module):
             # 1. run the i-th task and compute loss for k=0
             #print(grid)
             #reconstructed = self.net(x_spt[i], vars=None, bn_training=True)
-            lab_image = rgb2lab(x_spt[i])
+            
+            lab_image = rgb2lab(np.array(x_spt[i]))
             ab_image = lab_image[:,:,1:]
             color_feat = encode_313bin(np.expand_dims(ab_image, axis = 0), self.nnenc)[0]
             color_feat = np.mean(color_feat, axis = (0, 1))
@@ -527,7 +528,7 @@ class Meta(nn.Module):
             # this is the loss and accuracy before first update
             with torch.no_grad():
                 # [setsz, nway]
-                lab_image = rgb2lab(x_qry)
+                lab_image = rgb2lab(np.array(x_qry))
                 ab_image = lab_image[:,:,1:]
                 color_feat_query = encode_313bin(np.expand_dims(ab_image, axis = 0), self.nnenc)[0]
                 color_feat_query = np.mean(color_feat_query, axis = (0, 1))    
@@ -538,7 +539,7 @@ class Meta(nn.Module):
             # this is the loss after the first update
             with torch.no_grad():
                 # [setsz, nway]
-                lab_image = rgb2lab(x_qry)
+                lab_image = rgb2lab(np.array(x_qry))
                 ab_image = lab_image[:,:,1:]
                 color_feat_query = encode_313bin(np.expand_dims(ab_image, axis = 0), self.nnenc)[0]
                 color_feat_query = np.mean(color_feat_query, axis = (0, 1))
@@ -548,7 +549,7 @@ class Meta(nn.Module):
 
             for k in range(1, self.update_step):
                 # 1. run the i-th task and compute loss for k=1~K-1
-                lab_image = rgb2lab(x_spt[i])
+                lab_image = rgb2lab(np.array(x_spt[i]))
                 ab_image = lab_image[:,:,1:]
                 color_feat = encode_313bin(np.expand_dims(ab_image, axis = 0), self.nnenc)[0]
                 color_feat = np.mean(color_feat, axis = (0, 1))
@@ -561,10 +562,10 @@ class Meta(nn.Module):
                 fast_weights = list(map(lambda p: p[1] - self.update_lr * p[0], zip(grad, fast_weights)))
 
                 # Keep track of the loss on the query set
-                lab_image = rgb2lab(x_qry)
+                lab_image = rgb2lab(np.array(x_qry))
                 ab_image = lab_image[:,:,1:]
                 color_feat_query = encode_313bin(np.expand_dims(ab_image, axis = 0), self.nnenc)[0]
-                color_feat_query = np.mean(color_feat-query, axis = (0, 1))
+                color_feat_query = np.mean(color_feat_query, axis = (0, 1))
                 reconstructed_q = self.net(x_qry, color_feat_query)
                 # loss_q will be overwritten and just keep the loss_q on last update step.
                 loss_q = self.loss_func(reconstructed_q, y_qry)
