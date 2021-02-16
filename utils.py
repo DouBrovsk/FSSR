@@ -217,9 +217,7 @@ class ColorDataset(torch.utils.data.Dataset):
         for i in range(len(files) - 1):
             
             rgb_image = Image.open(files[i]).convert('RGB')
-            
             w, h = rgb_image.size
-            
             if w != h:
                 min_val = min(w, h)
                 rgb_image = rgb_image.crop((w // 2 - min_val // 2, h // 2 - min_val // 2, w // 2 + min_val // 2, h // 2 + min_val // 2))
@@ -227,6 +225,12 @@ class ColorDataset(torch.utils.data.Dataset):
             rgb_image = np.array(rgb_image.resize((256,256), Image.LANCZOS))
         
             lab_image = rgb2lab(rgb_image)
+            l_image = lab_image[:,:,:1]
+            ab_image = lab_image[:,:,1:]
+        
+            
+            color_feat = encode_313bin(np.expand_dims(ab_image, axis = 0), self.nnenc)[0]
+            color_feat = np.mean(color_feat, axis = (0, 1))
             
             support_l.append(transform(rgb_image))
             
@@ -242,9 +246,7 @@ class ColorDataset(torch.utils.data.Dataset):
 
 
         rgb_image = Image.open(files[-1]).convert('RGB')
-        
         w, h = rgb_image.size
-        
         if w != h:
             min_val = min(w, h)
             rgb_image = rgb_image.crop((w // 2 - min_val // 2, h // 2 - min_val // 2, w // 2 + min_val // 2, h // 2 + min_val // 2))
@@ -252,7 +254,13 @@ class ColorDataset(torch.utils.data.Dataset):
         rgb_image = np.array(rgb_image.resize((256,256), Image.LANCZOS))
     
         lab_image = rgb2lab(rgb_image)
-     
+        l_image = lab_image[:,:,:1]
+        ab_image = lab_image[:,:,1:]
+    
+        i
+        color_feat = encode_313bin(np.expand_dims(ab_image, axis = 0), self.nnenc)[0]
+        color_feat = np.mean(color_feat, axis = (0, 1))
+        
         query_l = (transform(rgb_image))
         
         gray_image = [lab_image[:,:,:1]]
