@@ -23,7 +23,7 @@ def encode_313bin(data_ab_ss, nn_enc):
     gt_ab_313 : [N, H, W, 313]
     '''
 
-    data_ab_ss = np.transpose(data_ab_ss, (0, 3, 1, 2))
+    data_ab_ss = np.transpose(data_ab_ss, (0, 2, 1, 3))
     gt_ab_313 = nn_enc.encode_points_mtx_nd(data_ab_ss, axis=1)
 
     gt_ab_313 = np.transpose(gt_ab_313, (0, 2, 3, 1))
