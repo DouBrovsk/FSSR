@@ -10,6 +10,7 @@ from skimage.color import rgb2lab, lab2rgb
 from copy import deepcopy
 from models import EDSR
 from loss_functions import perceptionLoss
+from utils import NNEncode,unflatten_2d_array,flatten_nd_array,na
 
 ## Adapted from: https://github.com/dragen1860/MAML-Pytorch/
 ## All credits for the code structure goes to dragen1860.
@@ -471,6 +472,7 @@ class Meta(nn.Module):
             self.loss_func = perceptionLoss()
         else:
             raise NotImplementedError
+        self.nnenc = NNEncode(10, 5, km_filepath = "./pts_in_hull.npy")
 
 
     def clip_grad_by_norm_(self, grad, max_norm):
