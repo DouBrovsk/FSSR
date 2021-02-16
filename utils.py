@@ -219,7 +219,7 @@ class ColorDataset(torch.utils.data.Dataset):
                 min_val = min(w, h)
                 rgb_image = rgb_image.crop((w // 2 - min_val // 2, h // 2 - min_val // 2, w // 2 + min_val // 2, h // 2 + min_val // 2))
         
-            rgb_image = np.array(rgb_image.resize((self.img_size, self.img_size), Image.LANCZOS))
+            rgb_image = np.array(rgb_image.resize((256,256), Image.LANCZOS))
         
             lab_image = rgb2lab(rgb_image)
             l_image = lab_image[:,:,:1]
@@ -248,7 +248,7 @@ class ColorDataset(torch.utils.data.Dataset):
             min_val = min(w, h)
             rgb_image = rgb_image.crop((w // 2 - min_val // 2, h // 2 - min_val // 2, w // 2 + min_val // 2, h // 2 + min_val // 2))
     
-        rgb_image = np.array(rgb_image.resize((self.img_size, self.img_size), Image.LANCZOS))
+        rgb_image = np.array(rgb_image.resize((256,256), Image.LANCZOS))
     
         lab_image = rgb2lab(rgb_image)
         l_image = lab_image[:,:,:1]
